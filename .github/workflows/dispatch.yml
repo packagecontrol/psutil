@@ -14,7 +14,7 @@ jobs:
         # GITHUB_TOKEN doesn't have the permission to trigger repository_dispatch
         # we are using our own PAT via secrets.GITHUB_PAT
         run: |
-            LINE=$(git log --format="" --name-only ${{ github.before }}..${{ github.ref }} | grep .github/workflows/build.yml | wc -l)
+            LINE=$(git log --format="" --name-only ${{ github.event.before }}..${{ github.event.head }} | grep .github/workflows/build.yml | wc -l)
             if [ "${LINE// /}" -ge 1  ]; then
               echo "dispatching build"
               curl -i -H 'authorization: Bearer ${{ secrets.GITHUB_PAT }}' \
