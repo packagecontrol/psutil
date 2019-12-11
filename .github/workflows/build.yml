@@ -74,6 +74,8 @@ jobs:
           bash /tmp/miniconda.sh -b -f -p $HOME/miniconda
       - name: Build
         run: |
+          export MACOSX_DEPLOYMENT_TARGET=10.9
+          export CPATH=`xcrun --show-sdk-path`/usr/include
           export PATH="$HOME/miniconda/bin:$PATH"
           echo 'allow_conda_downgrades: true' > ~/.condarc
           # conda config --set allow_conda_downgrades true
