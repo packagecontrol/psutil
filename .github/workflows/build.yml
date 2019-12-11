@@ -1,10 +1,14 @@
 name: build
 
-on: repository_dispatch
+on:
+  push:
+    paths:
+      - .github/workflows/build.yml
+    branches:
+      - master
 
 jobs:
   linux:
-    if: github.event.action == 'build'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -49,7 +53,7 @@ jobs:
         run: |
           git config --global user.email bot@packagecontrol.github.io
           git config --global user.name packagecontrol
-          git clone https://${{github.actor}}:${{secrets.GITHUB_PAT}}@github.com/${{github.repository}}.git project
+          git clone https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git project
           if [ "${{ matrix.arch }}" = "x86_64" ]; then
             ARCH="x64"
           else
@@ -65,7 +69,6 @@ jobs:
           git push -f -u origin st3_linux_$ARCH
 
   macos:
-    if: github.event.action == 'build'
     runs-on: macOS-latest
     steps:
       - name: Install Miniconda
@@ -100,7 +103,7 @@ jobs:
         run: |
           git config --global user.email bot@packagecontrol.github.io
           git config --global user.name packagecontrol
-          git clone https://${{github.actor}}:${{secrets.GITHUB_PAT}}@github.com/${{github.repository}}.git project
+          git clone https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git project
           cd project
           git checkout -b "st3_osx_x64"
           rm -rf "st3_osx_x64"
@@ -111,7 +114,6 @@ jobs:
           git push -f -u origin st3_osx_x64
 
   windows:
-    if: github.event.action == 'build'
     runs-on: windows-latest
     strategy:
       fail-fast: false
@@ -154,7 +156,7 @@ jobs:
           rm -rf /tmp/psutil/*.dist-info
           git config --global user.email bot@packagecontrol.github.io
           git config --global user.name packagecontrol
-          git clone https://${{github.actor}}:${{secrets.GITHUB_PAT}}@github.com/${{github.repository}}.git project
+          git clone https://${{github.actor}}:${{secrets.GITHUB_TOKEN}}@github.com/${{github.repository}}.git project
           ARCH=${{ matrix.arch }}
           cd project
           git checkout -b "st3_windows_$ARCH"
